@@ -1,14 +1,16 @@
-package com.gestion.lastfmapi;
+package com.gestion.lastfmapi.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.gestion.lastfmapi.R;
+
+public class Principal extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_principal);
     }
 }
