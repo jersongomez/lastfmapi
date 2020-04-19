@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1084308640886",
+    "firebase_url": "https://validlastfm.firebaseio.com",
+    "project_id": "validlastfm",
+    "storage_bucket": "validlastfm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084308640886:android:95aaabfc4ea6ff9a96bb57",
+        "android_client_info": {
+          "package_name": "com.gestion.lastfmapi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084308640886-gq9oglj1g9dci4en0f4neqstqkqr9trp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gestion.lastfmapi",
+            "certificate_hash": "dfd97a2710160b2ba2b0bbec2090ba78c7ca49b7"
+          }
+        },
+        {
+          "client_id": "1084308640886-q15a8kntncjohm5barrdk24t96did4q3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3np2ItN_a5ZJGmiqx8ABKnkgoHYsQk0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084308640886-q15a8kntncjohm5barrdk24t96did4q3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
