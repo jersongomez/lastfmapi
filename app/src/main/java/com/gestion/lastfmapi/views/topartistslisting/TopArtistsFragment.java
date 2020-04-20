@@ -106,11 +106,11 @@ public class TopArtistsFragment extends BaseFragment implements TopArtistsView {
     public void updateData(List<Artist> topArtists, String country) {
 
         if(Common.getInstance().isInternet(getContext())){
+            deleteData(country);
+            for(Artist artist : topArtists){
+                saveData(artist, country);
+            }
             if (mAdapter == null) {
-                deleteData(country);
-                for(Artist artist : topArtists){
-                    saveData(artist, country);
-                }
                 mAdapter = new TopArtistsAdapter(topArtists, getContext(), onArtistClickListener);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                 artistsRecyclerView.setLayoutManager(linearLayoutManager);
