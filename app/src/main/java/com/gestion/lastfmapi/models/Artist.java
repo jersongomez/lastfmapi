@@ -67,11 +67,11 @@ public class Artist {
         this.images = images;
     }
 
-    public String getImageUrl() {
+    public String getImageUrl(String size) {
         if (getImages() != null && getImages().size() > 0) {
             for (ImageItem img :
                     getImages()) {
-                if (img.getSize().equalsIgnoreCase("large")) {
+                if (img.getSize().equalsIgnoreCase(size)) {
                     return img.getUrl();
                 }
             }
