@@ -1,10 +1,14 @@
 package com.gestion.lastfmapi.views.topartistslisting;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.gestion.lastfmapi.models.Artist;
 import com.gestion.lastfmapi.models.TopArtistsResponse;
+import com.gestion.lastfmapi.utils.Common;
 
+import java.net.CookieHandler;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +22,8 @@ public class TopArtistsPresenterImpl implements TopArtistsPresenter {
     Disposable mDisposable;
     TopArtistsView mView;
     TopArtistsInteractor mInteractor;
+
+    private String countrySave;
 
     public TopArtistsPresenterImpl(TopArtistsView view, TopArtistsInteractor interactor) {
         this.mView = view;
@@ -35,6 +41,7 @@ public class TopArtistsPresenterImpl implements TopArtistsPresenter {
         disposeRequest();
         mView.showProgress();
         mView.hidEmpty();
+        countrySave = country;
         mDisposable = mInteractor.getTopArtists(country, limit, apiKey, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -55,12 +62,17 @@ public class TopArtistsPresenterImpl implements TopArtistsPresenter {
                         if (artists.size() == 0) {
                             mView.showEmpty();
                         }
-                        mView.updateData(artists);
+                        Log.e("TopArt",countrySave);
+                        mView.updateData(artists, countrySave);
 
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        Log.e("TopArt",countrySave);
+                        mView.hideProgress();
+                        List<Artist> artists = new ArrayList<Artist>();
+                        mView.updateData(artists, countrySave);
                         mView.showError();
                     }
                 });

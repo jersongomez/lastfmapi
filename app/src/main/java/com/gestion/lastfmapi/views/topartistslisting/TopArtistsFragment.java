@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gestion.lastfmapi.R;
 import com.gestion.lastfmapi.adapters.TopArtistsAdapter;
+import com.gestion.lastfmapi.databases.DBController;
 import com.gestion.lastfmapi.models.Artist;
 import com.gestion.lastfmapi.utils.Common;
 import com.gestion.lastfmapi.views.BaseFragment;
@@ -39,6 +40,7 @@ public class TopArtistsFragment extends BaseFragment implements TopArtistsView {
     @Inject
     TopArtistsPresenter mPresenter;
     TopArtistsAdapter mAdapter;
+    DBController dbController;
 
     public TopArtistsFragment() {
     }
@@ -56,6 +58,7 @@ public class TopArtistsFragment extends BaseFragment implements TopArtistsView {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_artists, container, false);
         ButterKnife.bind(this, view);
+        dbController = new DBController(getContext());
         return view;
     }
 
@@ -63,6 +66,7 @@ public class TopArtistsFragment extends BaseFragment implements TopArtistsView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerTopArtistsComponent.builder().topArtistsModule(new TopArtistsModule(this)).build().inject(this);
+        dbController = new DBController(getContext());
     }
 
     @Override
@@ -99,10 +103,14 @@ public class TopArtistsFragment extends BaseFragment implements TopArtistsView {
     }
 
     @Override
-    public void updateData(List<Artist> topArtists) {
+    public void updateData(List<Artist> topArtists, String country) {
 
         if(Common.getInstance().isInternet(getContext())){
             if (mAdapter == null) {
+                deleteData(country);
+                for(Artist artist : topArtists){
+                    saveData(artist, country);
+                }
                 mAdapter = new TopArtistsAdapter(topArtists, getContext(), onArtistClickListener);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                 artistsRecyclerView.setLayoutManager(linearLayoutManager);
@@ -111,6 +119,21 @@ public class TopArtistsFragment extends BaseFragment implements TopArtistsView {
             } else {
                 mAdapter.setDataset(topArtists);
             }
+        } else{
+            List<Artist> topArtistOff = new ArrayList<>();
+            topArtistOff = dbController.getArtist(country);
+
+            if (topArtistOff.size() > 0){
+                mAdapter = new TopArtistsAdapter(topArtistOff, getContext(), onArtistClickListener);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                artistsRecyclerView.setLayoutManager(layoutManager);
+                artistsRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            } else {
+                showEmpty();
+            }
+
+
         }
     }
 
@@ -127,7 +150,9 @@ public class TopArtistsFragment extends BaseFragment implements TopArtistsView {
 
     @Override
     public void showError() {
-        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
+        if (Common.getInstance().isInternet(getContext())) {
+            Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -141,6 +166,17 @@ public class TopArtistsFragment extends BaseFragment implements TopArtistsView {
 
     }
 
+    @Override
+    public void dbData(List<Artist> topArtists) {
+        List<Artist> topArtistOff = new ArrayList<>();
+        topArtistOff = dbController.getArtist(Common.DEFAULT_SEARCH);
+        mAdapter = new TopArtistsAdapter(topArtistOff, getContext(), onArtistClickListener);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        artistsRecyclerView.setLayoutManager(layoutManager);
+        artistsRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+    }
+
     public static TopArtistsFragment newInstance() {
         return new TopArtistsFragment();
     }
@@ -148,4 +184,13 @@ public class TopArtistsFragment extends BaseFragment implements TopArtistsView {
     public interface OnFragmentInteractionListener {
         void onArtistClicked(Artist artist);
     }
+
+    private boolean saveData(Artist artist, String country){
+        return dbController.saveArtist(artist, country);
+    }
+
+    private void deleteData(String country){
+        dbController.deleteArtist(country);
+    }
+
 }

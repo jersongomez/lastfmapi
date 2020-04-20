@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.gestion.lastfmapi.R;
+import com.gestion.lastfmapi.utils.Common;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -67,13 +68,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (currentUser != null) {
             Log.e(TAG, "current user" + currentUser.getEmail());
-            launchPrincipalActivity(currentUser);
+            launchPrincipalActivity();
         }
     }
 
     public void signInToGoogle() {
-        Intent signInIntent = googleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        if (Common.getInstance().isInternet(getApplicationContext())) {
+            Intent signInIntent = googleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        } else {
+            showToast(getString(R.string.firebase_fail));
+            launchPrincipalActivity();
+        }
     }
 
     @Override
@@ -102,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             Log.e(TAG, "signInWithCredential:success: currentUser: " + user.getEmail());
-                            launchPrincipalActivity(user);
+                            launchPrincipalActivity();
                         } else {
                             Log.e(TAG, "signInWithCredential:failure", task.getException());
                             showToastMessage("Firebase Authentication failed:" + task.getException());
@@ -115,9 +121,11 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void launchPrincipalActivity(FirebaseUser user) {
-        if (user != null) {
-            startActivity(new Intent(this, Principal.class));
-        }
+    private void launchPrincipalActivity() {
+        startActivity(new Intent(this, Principal.class));
+    }
+
+    private void showToast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }
