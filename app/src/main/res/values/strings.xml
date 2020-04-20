@@ -6,4 +6,5 @@
     <string name="error">An error occurred, please try again!!</string>
     <string name="write_value">Country</string>
     <string name="search_hint">Search List Country</string>
+    <string name="firebase_fail">Starting without firebase authentication</string>
 </resources>

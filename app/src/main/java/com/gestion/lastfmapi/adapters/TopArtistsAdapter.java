@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gestion.lastfmapi.R;
 import com.gestion.lastfmapi.models.Artist;
+import com.gestion.lastfmapi.utils.Common;
 import com.gestion.lastfmapi.utils.ImageLoader;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class TopArtistsAdapter extends RecyclerView.Adapter<TopArtistsAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Artist item = mDataset.get(position);
-        ImageLoader.imageLoad(mContext, item.getImageUrl(), R.drawable.ic_empty, holder.artistImageView);
+        ImageLoader.imageLoad(mContext, item.getImageUrl(Common.DEFAULT_SIZE_IMG), R.drawable.ic_empty, holder.artistImageView);
         holder.artistTextView.setText(item.getName());
         holder.listenersTextView.setText(item.getListeners());
     }
