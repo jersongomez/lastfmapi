@@ -118,7 +118,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (!db.isOpen()) {
             openDatabase();
         }
-        db.execSQL("DELETE FROM " + DataBaseTables.ARTISTS + " WHERE " + DataBaseTables.ARTIST_COUNTRY + " = '" + country + "'");
+        db.execSQL("DELETE FROM " + DataBaseTables.TABLE_ARTIST + " WHERE " + DataBaseTables.ARTIST_COUNTRY + " = '" + country + "'");
     }
 
 }
